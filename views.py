@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render, resolve_url
 from django.views.decorators.http import require_http_methods
 
@@ -68,6 +68,34 @@ def register_view(request):
             return HttpResponseRedirect(resolve_url(settings.LOGIN_REDIRECT_URL))
 
     return render(request, 'accounts/register.html', context)
+
+
+@require_http_methods(['GET', 'POST'])
+@login_required
+def password_view(request):
+    username = request.user.username
+    context = {'username': username }
+
+    if 'POST' == request.method:
+        password = request.POST['password']
+        repassword = request.POST['repassword']
+
+        if password and repassword:
+            if password == repassword:
+                try:
+                    user = User.objects.get(username=username)
+                    user.set_password(password)
+                    user.save()
+                    context['info_message'] = "Password has been changed"
+                except User.DoesNotExist:
+                    logout(request)
+                    return HttpResponseNotFound("User `%s` not found" % (username,))
+            else:
+                context['error_message'] = 'Password not matched'
+        else:
+            context['error_message'] = 'Empty password'
+
+    return render(request, 'accounts/password.html', context)
 
 
 @login_required
