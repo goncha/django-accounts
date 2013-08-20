@@ -105,6 +105,11 @@ def logout_view(request):
 
 
 @login_required
+def home_view(request):
+    return HttpResponseRedirect(resolve_url(settings.LOGIN_REDIRECT_URL))
+
+
+@login_required
 def profile_view(request):
     context = {'user': request.user}
     return render(request, 'accounts/profile.html', context)
