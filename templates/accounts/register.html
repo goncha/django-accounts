@@ -1,0 +1,16 @@
+<form method="post" id="" action="{% url 'accounts:register' %}">
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% endif %}
+{% csrf_token %}
+<label for="username">Username:</label>
+<input type="text" name="username" value="{{ username }}"/>
+<br />
+<label for="password">Password:</label>
+<input type="password" name="password" value=""/>
+<br />
+<label for="repassword">Re-Password:</label>
+<input type="password" name="repassword" value=""/>
+<br />
+<input type="submit" name="" value="Register" />
+</form>

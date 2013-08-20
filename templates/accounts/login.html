@@ -1,0 +1,16 @@
+<form method="post" id="" action="{% url 'accounts:login' %}">
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% endif %}
+{% csrf_token %}
+<label for="username">Username:</label>
+<input type="text" name="username" value="{{ username }}"/>
+<br />
+<label for="password">Password:</label>
+<input type="password" name="password" value=""/>
+<br />
+<input type="hidden" name="next" value="{{ next }}"/>
+<input type="submit" name="" value="Login" />
+</form>
+<br />
+Not a member of this site, please go ahead to <a href="{% url 'accounts:register' %}"><strong>Register</strong></a>.
